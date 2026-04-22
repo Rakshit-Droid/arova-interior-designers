@@ -1,0 +1,170 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* =========================================================
+   Custom font — Rustic Roadway (signature wordmark accent)
+   License: personal use. Obtain commercial license from
+   letterara.com before shipping to production.
+   ========================================================= */
+@font-face {
+  font-family: "Rustic Roadway";
+  src: url("/fonts/RusticRoadway.otf") format("opentype");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+:root {
+  --font-rustic: "Rustic Roadway", Georgia, serif;
+
+  /* Brand tokens */
+  --bone: #f4f2ed;
+  --cream: #fdfbf7;
+  --ink: #0e0a0c;
+  --alabaster: #dce0d9;
+  --midnight: #31081f;
+  --midnight-deep: #1c0512;
+
+  /* Motion */
+  --ease-editorial: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-sleek: cubic-bezier(0.32, 0.72, 0, 1);
+}
+
+html {
+  color-scheme: light;
+  scroll-behavior: auto;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+body {
+  background: var(--bone);
+  color: var(--ink);
+  font-feature-settings: "ss01", "ss02", "cv11", "ss03";
+  font-family: var(--font-geist-sans), system-ui, sans-serif;
+  /* clip (not hidden) avoids creating a scroll container that breaks
+     position: sticky on descendants (Chrome/Safari quirk). */
+  overflow-x: clip;
+}
+html {
+  overflow-x: clip;
+}
+
+/* Selection */
+::selection {
+  background: var(--midnight);
+  color: var(--bone);
+}
+
+/* Scrollbar — slim, ink */
+::-webkit-scrollbar { width: 10px; height: 10px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb {
+  background: rgba(14, 10, 12, 0.15);
+  border-radius: 999px;
+  border: 3px solid var(--bone);
+}
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(14, 10, 12, 0.35);
+}
+
+/* Film-grain / paper noise overlay — fixed, ignored by pointer */
+.grain-overlay {
+  pointer-events: none;
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  opacity: 0.035;
+  mix-blend-mode: multiply;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='240' height='240'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0.9 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
+}
+
+/* Lenis smooth-scroll hooks */
+html.lenis, html.lenis body { height: auto; }
+.lenis.lenis-smooth { scroll-behavior: auto !important; }
+.lenis.lenis-smooth [data-lenis-prevent] { overscroll-behavior: contain; }
+.lenis.lenis-stopped { overflow: hidden; }
+
+/* Reveal primitives */
+@keyframes softRise {
+  0%   { transform: translateY(2.5rem); filter: blur(8px); opacity: 0; }
+  100% { transform: translateY(0); filter: blur(0); opacity: 1; }
+}
+.reveal-soft {
+  animation: softRise 1000ms var(--ease-editorial) both;
+}
+
+/* Text wipe — line-by-line mask reveal */
+.mask-line { overflow: hidden; display: block; }
+.mask-line > span { display: inline-block; will-change: transform; }
+
+/* Utility: clamp fluid headline */
+.fluid-hero {
+  font-size: clamp(3.25rem, 9.5vw, 10.5rem);
+  line-height: 0.92;
+  letter-spacing: -0.045em;
+}
+.fluid-display {
+  font-size: clamp(2.25rem, 5.6vw, 5.5rem);
+  line-height: 0.95;
+  letter-spacing: -0.035em;
+}
+.fluid-section {
+  font-size: clamp(1.75rem, 3.2vw, 3.25rem);
+  line-height: 1.02;
+  letter-spacing: -0.025em;
+}
+
+/* Eyebrow */
+.eyebrow {
+  font-family: var(--font-geist-mono), ui-monospace, monospace;
+  font-size: 10px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  font-weight: 500;
+}
+
+/* Magnetic hover — base */
+.magnetic { will-change: transform; }
+
+/* Input focus ring */
+.field-focus:focus-within {
+  box-shadow: 0 0 0 1px var(--ink);
+}
+
+/* Underline reveal */
+.u-reveal {
+  background-image: linear-gradient(currentColor, currentColor);
+  background-size: 0 1px;
+  background-position: 0 100%;
+  background-repeat: no-repeat;
+  transition: background-size 700ms var(--ease-editorial);
+}
+.u-reveal:hover { background-size: 100% 1px; }
+
+/* Hide native cursor on desktop when custom cursor active */
+@media (hover: hover) and (pointer: fine) {
+  .custom-cursor-on, .custom-cursor-on * { cursor: none !important; }
+}
+
+/* Image placeholder shimmer */
+.ph-shimmer {
+  background: linear-gradient(110deg, #ebe8e2 8%, #f4f2ed 18%, #ebe8e2 33%);
+  background-size: 200% 100%;
+  animation: shimmer 2.2s linear infinite;
+}
+@keyframes shimmer {
+  to { background-position-x: -200%; }
+}
+
+/* Curtain transition */
+@keyframes curtainIn {
+  0%   { transform: translateY(100%); }
+  100% { transform: translateY(0); }
+}
+@keyframes curtainOut {
+  0%   { transform: translateY(0); }
+  100% { transform: translateY(-100%); }
+}
